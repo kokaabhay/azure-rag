@@ -1,0 +1,12 @@
+openai
+azure-search-documents
+azure-storage-blob
+python-dotenv
+dotenv
+tiktoken
+pep8
+ninja
+pytest
+ruff
+requests
+cohere
