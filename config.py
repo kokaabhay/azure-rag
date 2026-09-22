@@ -21,7 +21,7 @@ AZURE_SEARCH_INDEX = os.getenv(
 )
 
 MAX_CONTEXT_TOKENS = int(
-    os.getenv("MAX_CONTEXT_TOKENS", "4000")
+    os.getenv("MAX_CONTEXT_TOKENS", "5000")
 )
 
 TOP_K = int(

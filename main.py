@@ -3,7 +3,7 @@ from app.llm.prompt import build_prompt
 from app.llm.service import generate_answer
 from app.retrieval.hybrid_search import hybrid_search
 from app.retrieval.reranker import rerank_documents
-
+from app.llm.prompt import build_context
 
 def main():
     query = input("Ask a question: ")
@@ -19,13 +19,16 @@ def main():
     documents = hybrid_search(rewritten_query)
 
     print(f"\nRetrieved {len(documents)} documents.")
-
+    # for i in documents:
+    #     print(i)
     reranked_documents = rerank_documents(
         query=query,
         documents=documents,
         top_k=5,
     )
-
+    
+    context_documents=build_context(reranked_documents)
+    print("context documents: ",context_documents)
     print("\nReranked documents:\n")
 
     for i, document in enumerate(
@@ -41,7 +44,7 @@ def main():
 
     prompt = build_prompt(
         query=query,
-        documents=reranked_documents,
+        documents=context_documents,
     )
 
     answer = generate_answer(prompt)

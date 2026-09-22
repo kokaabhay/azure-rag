@@ -1,3 +1,33 @@
+
+import tiktoken
+
+from config import MAX_CONTEXT_TOKENS
+
+
+encoding = tiktoken.get_encoding("cl100k_base")
+
+
+def build_context(documents: list[dict]) -> list[dict]:
+    selected_documents = []
+    total_tokens = 0
+    #print(type(documents))
+    for document in documents:
+        content = document["content"]
+
+        token_count = len(
+            encoding.encode(content)
+        )
+
+        if total_tokens + token_count > MAX_CONTEXT_TOKENS:
+            break
+
+        selected_documents.append(document)
+
+        total_tokens += token_count
+
+    return selected_documents
+
+
 def build_prompt(query: str, documents: list[dict]) -> str:
     context_parts = []
 

@@ -4,6 +4,7 @@ from config import (
     AZURE_CHAT_DEPLOYMENT,
     AZURE_OPENAI_API_KEY,
     AZURE_OPENAI_ENDPOINT,
+   
 )
 
 
@@ -29,6 +30,7 @@ def generate_answer(prompt: str) -> str:
                 "content": prompt,
             },
         ],
+   
         temperature=0,
     )
 

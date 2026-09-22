@@ -13,7 +13,7 @@ http_client = httpx.Client(
     timeout=60.0,
 )
 
-print("Reranker endpoint:", repr(AZURE_RERANK_ENDPOINT))
+#print("Reranker endpoint:", repr(AZURE_RERANK_ENDPOINT))
 def rerank_documents(
     query: str,
     documents: list[dict],
@@ -49,10 +49,12 @@ def rerank_documents(
     reranked_documents = []
 
     for item in result["results"]:
-        document = documents[item["index"]].copy()
-
+        document = documents[item["index"]].copy()        
         document["rerank_score"] = item["relevance_score"]
-
+        # for i in document.keys():
+        #     print(i)
+            
         reranked_documents.append(document)
-
+        # for i in reranked_documents:
+        #     print(i)
     return reranked_documents
