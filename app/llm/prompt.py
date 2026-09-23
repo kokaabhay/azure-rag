@@ -12,7 +12,8 @@ def build_context(documents: list[dict]) -> list[dict]:
     total_tokens = 0
     #print(type(documents))
     for document in documents:
-        content = document["content"]
+        if document["content"]:
+            content = document["content"]
 
         token_count = len(
             encoding.encode(content)
