@@ -29,9 +29,9 @@ def build_context(documents: list[dict]) -> list[dict]:
     return selected_documents
 
 
-def build_prompt(query: str, documents: list[dict]) -> str:
+def build_prompt(query: str, documents: list[dict], h_documents: list[dict]) -> str:
     context_parts = []
-
+    hyde_context_parts=[]
     for i, document in enumerate(documents, start=1):
         context_parts.append(
             f"[Source {i}: {document['source']}]\n"
@@ -39,6 +39,14 @@ def build_prompt(query: str, documents: list[dict]) -> str:
         )
 
     context = "\n\n".join(context_parts)
+
+    for i, document in enumerate(h_documents, start=1):
+        hyde_context_parts.append(
+            f"[Source {i}: {document['source']}]\n"
+            f"{document['content']}"
+        )
+
+    h_context = "\n\n".join(hyde_context_parts)
 
     return f"""
 You are a helpful customer support assistant.
@@ -55,6 +63,10 @@ Be concise, polite, and easy to understand.
 Knowledge Base Context:
 ------------------------
 {context}
+------------------------
+Hypothetical answer Based Context:
+------------------------
+{h_context}
 ------------------------
 
 User Question:

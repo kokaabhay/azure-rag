@@ -7,6 +7,8 @@ from app.llm.service import generate_answer
 from app.retrieval.hybrid_search import hybrid_search
 from app.retrieval.reranker import rerank_documents
 from app.llm.prompt import build_context
+from app.retrieval.hybrid_search import hyde_retrieval
+from app.llm.hyde import generate_hypothetical_answer
 router=APIRouter(tags=["API"])
 
 
@@ -25,9 +27,14 @@ def response(response_object:Response_Object):
     print("\nRewritten query:")
     print(rewritten_query)
 
+    hypothetical_answer=generate_hypothetical_answer(rewritten_query)
+    print("\nHypothetical answer:")
+    print(hypothetical_answer)
+    
     documents = hybrid_search(rewritten_query)
-
     print(f"\nRetrieved {len(documents)} documents.")
+    h_documents=hyde_retrieval(hypothetical_answer)
+    
     # for i in documents:
     #     print(i)
     reranked_documents = rerank_documents(
@@ -51,9 +58,18 @@ def response(response_object:Response_Object):
         print(document["content"][:500])
         print()
 
+    reranked_h_documents = rerank_documents(
+            query=query,
+            documents=h_documents,
+            top_k=5,
+        )
+        
+    #context_h_documents=build_context(reranked_h_documents)
+
     prompt = build_prompt(
         query=query,
         documents=context_documents,
+        h_documents=reranked_h_documents,
     )
 
     answer = generate_answer(prompt)
@@ -62,5 +78,5 @@ def response(response_object:Response_Object):
     print("FINAL ANSWER")
     print("=" * 60)
     print(answer)
-    return "Re-written query is : " + rewritten_query+" \n\n LLM response is :"+ answer
+    return "Re-written query is : " + rewritten_query+ "\n\nHypothetical answer:"+hypothetical_answer + " \n\n LLM response is :"+ answer
     
