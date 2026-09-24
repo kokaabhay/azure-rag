@@ -12,5 +12,6 @@ if st.button("Ask question"):
         json={"query":q})
         answer=response.json()
         st.write(answer)
+
    
 

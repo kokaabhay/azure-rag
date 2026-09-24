@@ -62,5 +62,5 @@ def response(response_object:Response_Object):
     print("FINAL ANSWER")
     print("=" * 60)
     print(answer)
-    return answer
+    return "Re-written query is : " + rewritten_query+" \n\n LLM response is :"+ answer
     
