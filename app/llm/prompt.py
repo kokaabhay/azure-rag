@@ -1,6 +1,6 @@
 
 import tiktoken
-
+from typing import Optional
 from config import MAX_CONTEXT_TOKENS
 
 
@@ -29,25 +29,23 @@ def build_context(documents: list[dict]) -> list[dict]:
     return selected_documents
 
 
-def build_prompt(query: str, documents: list[dict], h_documents: list[dict]) -> str:
+def build_prompt(query: str, documents: list[dict]|None, h_documents: list[dict]|None) -> str:
     context_parts = []
     hyde_context_parts=[]
-    for i, document in enumerate(documents, start=1):
-        context_parts.append(
-            f"[Source {i}: {document['source']}]\n"
-            f"{document['content']}"
-        )
-
+    if documents:
+        for i, document in enumerate(documents, start=1):
+            context_parts.append(
+                f"[Source {i}: {document['source']}]\n"
+                f"{document['content']}"
+            )
     context = "\n\n".join(context_parts)
-
-    for i, document in enumerate(h_documents, start=1):
-        hyde_context_parts.append(
-            f"[Source {i}: {document['source']}]\n"
-            f"{document['content']}"
-        )
-
+    if h_documents:
+        for i, document in enumerate(h_documents, start=1):
+            hyde_context_parts.append(
+                f"[Source {i}: {document['source']}]\n"
+                f"{document['content']}"
+            )
     h_context = "\n\n".join(hyde_context_parts)
-
     return f"""
 You are a helpful customer support assistant.
 
@@ -60,11 +58,13 @@ the question.
 
 Be concise, polite, and easy to understand.
 
+If the user question doesn't need any retrieval then the Knowledge Base Context and the HyDE Retrieved Knowledge Base Context will be empty
+
 Knowledge Base Context:
 ------------------------
 {context}
 ------------------------
-Hypothetical answer Based Context:
+HyDE Retrieved Knowledge Base Context:
 ------------------------
 {h_context}
 ------------------------
